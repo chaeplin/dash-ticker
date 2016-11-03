@@ -1,6 +1,9 @@
 server setup
 ===================================
 
+![1](ticker-server.jpg)
+
+
 # Web(nginx / haproxy / sentinel)
 * nginx / openresty
 ```
