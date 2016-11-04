@@ -173,3 +173,14 @@ slaveof 192.168.10.1 6379
 
 - cron 
  https://github.com/chaeplin/dash-price
+
+
+
+
+ # cert
+ ```
+wget https://dl.eff.org/certbot-auto
+chmod a+x certbot-auto
+./certbot-auto certonly --webroot -w /usr/local/nginx/html/ -d test.stats.dash.org
+./certbot-auto renew --dry-run
+
