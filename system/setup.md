@@ -175,9 +175,14 @@ slaveof 192.168.10.1 6379
  https://github.com/chaeplin/dash-price
 
 
+- backup
+```
+apt-get install -y rdiff-backup
+rdiff-backup --preserve-numerical-ids --no-file-statistics /var/lib/redis /home/redis-bckup
+```
 
 
- # cert
+# cert
  ```
 wget https://dl.eff.org/certbot-auto
 chmod a+x certbot-auto
