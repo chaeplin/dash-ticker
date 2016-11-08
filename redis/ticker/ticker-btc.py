@@ -14,7 +14,7 @@ from twython import Twython, TwythonError
 
 from config.role import HOST_ROLE, MASTER_SETINEL_HOST, MASTER_REDIS_MASTER, SLAVE_SETINEL_HOST, SLAVE_REDIS_MASTER
 from config.twitter import APP_KEY, APP_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET, ISS_BUCKET_NAME, ISS_BUCKET_KEY, ISS_BUCKET_AKEY, ISS_PREFIX_BTCUSD
-from config.rkeys import r_KEY_BTC_PRICE, r_SS_BTC_PRICE, 
+from config.rkeys import r_KEY_BTC_PRICE, r_SS_BTC_PRICE 
 
 def make_request(URL, CHECK_STRRING):
     USERAGET = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/602.2.14 (KHTML, like Gecko) Version/10.0.1 Safari/602.2.14'
