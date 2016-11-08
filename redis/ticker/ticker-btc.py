@@ -120,6 +120,7 @@ def check_redis():
         print(e.args[0])
         sys.exit()
 
+#---------------------------------
 def check_update():
     cur_time = time.time()
     lastupdate = json.loads(r.get(r_KEY_BTC_PRICE))['tstamp']
