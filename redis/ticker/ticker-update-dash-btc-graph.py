@@ -9,7 +9,7 @@ import time
 from statistics import mean
 
 from config.role import HOST_ROLE, MASTER_SETINEL_HOST, MASTER_REDIS_MASTER, SLAVE_SETINEL_HOST, SLAVE_REDIS_MASTER
-from config.rkeys import r_SS_DASH_BTC_1H_HISTORY, r_SS_DASH_BTC_5MIN_HISTORY, r_SS_DASH_BTC_PRICE, r_KEY_DASH_BTC_AVG_HISTORY
+from config.rkeys import r_SS_DASH_BTC_1H_HISTORY, r_SS_DASH_BTC_5MIN_HISTORY, r_SS_DASH_BTC_PRICE, r_KEY_DASH_BTC_AVG_HISTORY, r_KEY_DASH_BTC_MIN_HISTORY, r_KEY_DASH_BTC_MAX_HISTORY
 
 
 def get_data():
@@ -23,10 +23,10 @@ def get_data():
     data1h = r.zrangebyscore(r_SS_DASH_BTC_1H_HISTORY, epochfirst, epoch5minlast) 
     for x in data1h:
         tstampx, minvalx, avgvalx, maxvalx = x.decode("utf-8").split(':')
-        #list_min.append([int(tstampx + '000'), float(minvalx)])
-        #list_avg.append([int(tstampx + '000'), float(avgvalx)])
-        #list_max.append([int(tstampx + '000'), float(maxvalx)])
-        list_avg.append([int(tstampx + '000'), float(maxvalx)])
+        list_min.append([int(tstampx + '000'), float(minvalx)])
+        list_avg.append([int(tstampx + '000'), float(avgvalx)])
+        list_max.append([int(tstampx + '000'), float(maxvalx)])
+        #list_avg.append([int(tstampx + '000'), float(maxvalx)])
 
     data5m = r.zrangebyscore(r_SS_DASH_BTC_5MIN_HISTORY, epoch5minlast, epoch1minlast)
     for y in data5m:
@@ -41,6 +41,8 @@ def get_data():
 
     pipe = r.pipeline()
     pipe.set(r_KEY_DASH_BTC_AVG_HISTORY, list_avg)
+    pipe.set(r_KEY_DASH_BTC_MIN_HISTORY, list_min)
+    pipe.set(r_KEY_DASH_BTC_MAX_HISTORY, list_max)
     #pipe.set(r_KEY_DASH_BTC_AVG_HISTORY, json.dumps(list_avg))
     response = pipe.execute()
 
@@ -91,5 +93,4 @@ except Exception as e:
 
 
 get_data()
-
 

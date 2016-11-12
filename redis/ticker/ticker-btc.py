@@ -50,7 +50,7 @@ def get_bitfinex():
         value = round(float(rawjson[CHECK_STRRING]), 2)
         if value > 0:
             btcusd[exsymbol] = value
-            btcusd_ttook[exsymbol]  = get_tooktime(START) 
+            btcusd_ttook[exsymbol]  = get_tooktime(START)
             btcusd_tstamp[exsymbol] = epoch00
 
 def get_gdax():
