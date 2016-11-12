@@ -66,40 +66,7 @@ Highcharts.setOptions({
                 tooltip: {
                     valueDecimals: 2
                 }
-            }],
-
-            responsive: {
-                rules: [{
-                    condition: {
-                        maxWidth: 500
-                    },
-                    chartOptions: {
-                        chart: {
-                            height: 300
-                        },
-                        subtitle: {
-                            text: null
-                        },
-                        navigator: {
-                            enabled: false
-                        }
-                    }
-                }]
-            }
-        });
-
-
-        $('#small').click(function () {
-            chart.setSize(400);
-        });
-
-        $('#large').click(function () {
-            chart.setSize(800);
-        });
-
-        $('#auto').click(function () {
-            chart.setSize(null);
-
+            }]
         });
     });
 });
@@ -108,9 +75,7 @@ Highcharts.setOptions({
     <body>
 <script src="https://code.highcharts.com/stock/highstock.js"></script>
 
-<div id="container"></div>
-<button id="large">Large</button>
-<button id="small">Small</button>
-<button id="auto">Auto</button>
+<div id="container" style="height: 400px"></div>
     </body>
 </html>
+
