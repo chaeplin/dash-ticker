@@ -23,5 +23,5 @@ r_SS_DASH_BTC_1H_HISTORY   = history_key_prefix + 'ss_dash_btc_1h_history'
 
 #
 r_KEY_DASH_BTC_AVG_HISTORY = history_key_prefix + 'key_dash_btc_avg_history'
-
-#
+r_KEY_DASH_BTC_MIN_HISTORY = history_key_prefix + 'key_dash_btc_min_history'
+r_KEY_DASH_BTC_MAX_HISTORY = history_key_prefix + 'key_dash_btc_max_history'
