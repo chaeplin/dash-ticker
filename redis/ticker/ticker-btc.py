@@ -13,8 +13,14 @@ from ISStreamer.Streamer import Streamer
 from twython import Twython, TwythonError
 
 from config.role import HOST_ROLE, MASTER_SETINEL_HOST, MASTER_REDIS_MASTER, SLAVE_SETINEL_HOST, SLAVE_REDIS_MASTER
-from config.twitter import APP_KEY, APP_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET, ISS_BUCKET_NAME, ISS_BUCKET_KEY, ISS_BUCKET_AKEY, ISS_PREFIX_BTCUSD
-from config.rkeys import r_KEY_BTC_PRICE, r_SS_BTC_PRICE 
+from config.twitter import APP_KEY, APP_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET, ISS_BUCKET_NAME, ISS_BUCKET_KEY, ISS_BUCKET_AKEY, ISS_PREFIX_BTCUSD, ISS_PREFIX_BTCUSD_TT, ISS_PREFIX_BTCUSD_TS
+from config.rkeys import r_KEY_BTC_PRICE, r_SS_BTC_PRICE
+
+def get_espochtime():
+    return time.time()
+
+def get_tooktime(START):
+    return (time.time() - START)
 
 def make_request(URL, CHECK_STRRING):
     USERAGET = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/602.2.14 (KHTML, like Gecko) Version/10.0.1 Safari/602.2.14'
@@ -35,6 +41,7 @@ def make_request(URL, CHECK_STRRING):
         return None
 
 def get_bitfinex():
+    START         = get_espochtime()
     URL           = 'https://api.bitfinex.com/v1/pubticker/BTCUSD'
     CHECK_STRRING = 'last_price'
     exsymbol      = 'bitfinex'
@@ -43,8 +50,11 @@ def get_bitfinex():
         value = round(float(rawjson[CHECK_STRRING]), 2)
         if value > 0:
             btcusd[exsymbol] = value
+            btcusd_ttook[exsymbol]  = get_tooktime(START) 
+            btcusd_tstamp[exsymbol] = epoch00
 
 def get_gdax():
+    START         = get_espochtime()
     URL           = 'https://api.gdax.com/products/BTC-USD/ticker'
     CHECK_STRRING = 'price'
     exsymbol      = 'gdax'
@@ -53,8 +63,11 @@ def get_gdax():
         value = round(float(rawjson[CHECK_STRRING]), 2)
         if value > 0:
             btcusd[exsymbol] = value
+            btcusd_ttook[exsymbol]  = get_tooktime(START)
+            btcusd_tstamp[exsymbol] = epoch00
 
 def get_btce():
+    START         = get_espochtime()
     URL           = 'https://btc-e.com/api/3/ticker/btc_usd'
     CHECK_STRRING = 'btc_usd'
     exsymbol      = 'btce'
@@ -63,8 +76,11 @@ def get_btce():
         value = round(float(rawjson[CHECK_STRRING]['last']), 2)
         if value > 0:
             btcusd[exsymbol] = value
+            btcusd_ttook[exsymbol]  = get_tooktime(START)
+            btcusd_tstamp[exsymbol] = epoch00
 
 def get_xbtce():
+    START         = get_espochtime()
     URL           = 'https://cryptottlivewebapi.xbtce.net:8443/api/v1/public/ticker/BTCUSD'
     CHECK_STRRING = 'Symbol'
     exsymbol      = 'xbtce'
@@ -74,8 +90,11 @@ def get_xbtce():
             value = round(float(rawjson['BestBid']), 2)
             if value > 0:
                 btcusd[exsymbol] = value
+                btcusd_ttook[exsymbol]  = get_tooktime(START)
+                btcusd_tstamp[exsymbol] = epoch00
 
 def get_bitstamp():
+    START         = get_espochtime()
     URL           = 'https://www.bitstamp.net/api/v2/ticker_hour/btcusd/'
     CHECK_STRRING = 'last'
     exsymbol      = 'bitstamp'
@@ -84,8 +103,11 @@ def get_bitstamp():
         value = round(float(rawjson[CHECK_STRRING]), 2)
         if value > 0:
             btcusd[exsymbol] = value
+            btcusd_ttook[exsymbol]  = get_tooktime(START)
+            btcusd_tstamp[exsymbol] = epoch00
 
 def get_okcoin():
+    START         = get_espochtime()
     URL           = 'https://www.okcoin.com/api/v1/ticker.do?exsymbol=btc_usd'
     CHECK_STRRING = 'ticker'
     exsymbol      = 'okcoin'
@@ -94,7 +116,8 @@ def get_okcoin():
         value = round(float(rawjson['ticker']['last']), 2)
         if value > 0:
             btcusd[exsymbol] = value
-
+            btcusd_ttook[exsymbol]  = get_tooktime(START)
+            btcusd_tstamp[exsymbol] = epoch00
 
 def check_redis():
     if HOST_ROLE == 'MASTER':
@@ -141,6 +164,8 @@ r = redis.StrictRedis(connection_pool=POOL)
 
 #
 btcusd = {}
+btcusd_ttook = {}
+btcusd_tstamp = {}
 now = datetime.now()
 epoch00 = int(time.mktime(now.timetuple())) - now.second
 
@@ -181,6 +206,8 @@ try:
     # ISS
     try:
         streamer.log_object(btcusd, key_prefix=ISS_PREFIX_BTCUSD, epoch=epoch00)
+        streamer.log_object(btcusd_ttook, key_prefix=ISS_PREFIX_BTCUSD_TT, epoch=epoch00)
+        streamer.log_object(btcusd_tstamp, key_prefix=ISS_PREFIX_BTCUSD_TS, epoch=epoch00)
         streamer.flush()
         streamer.close()
 

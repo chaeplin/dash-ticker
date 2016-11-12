@@ -13,8 +13,14 @@ from ISStreamer.Streamer import Streamer
 from twython import Twython, TwythonError
 
 from config.role import HOST_ROLE, MASTER_SETINEL_HOST, MASTER_REDIS_MASTER, SLAVE_SETINEL_HOST, SLAVE_REDIS_MASTER
-from config.twitter import APP_KEY, APP_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET, ISS_BUCKET_NAME, ISS_BUCKET_KEY, ISS_BUCKET_AKEY, ISS_PREFIX_DASHBTC, ISS_PREFIX_DASHUSD
+from config.twitter import APP_KEY, APP_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET, ISS_BUCKET_NAME, ISS_BUCKET_KEY, ISS_BUCKET_AKEY, ISS_PREFIX_DASHBTC, ISS_PREFIX_DASHUSD, ISS_PREFIX_DASHUSD_TT, ISS_PREFIX_DASHUSD_TS, ISS_PREFIX_DASHBTC_TT, ISS_PREFIX_DASHBTC_TS
 from config.rkeys import r_KEY_DASH_BTC_PRICE, r_KEY_DASH_USD_PRICE, r_SS_DASH_BTC_PRICE, r_SS_DASH_USD_PRICE
+
+def get_espochtime():
+    return time.time()
+
+def get_tooktime(START):
+    return (time.time() - START)
 
 def make_request(URL, CHECK_STRRING):
     USERAGET = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/602.2.14 (KHTML, like Gecko) Version/10.0.1 Safari/602.2.14'
@@ -35,6 +41,7 @@ def make_request(URL, CHECK_STRRING):
         return None
 
 def get_poloniex():
+    START         = get_espochtime()
     URL           = 'https://poloniex.com/public?command=returnTicker'
     CHECK_STRRING = 'BTC_DASH'
     SECON_STRRING = 'USDT_DASH'
@@ -47,9 +54,11 @@ def get_poloniex():
             if valbtc > 0 and valusd > 0:
                 dashbtc[exsymbol] = valbtc
                 dashusd[exsymbol] = valusd
-
+                dashbtc_ttook[exsymbol]  = dashusd_ttook[exsymbol] =  get_tooktime(START)
+                dashbtc_tstamp[exsymbol] = dashusd_tstamp[exsymbol] = epoch00
 
 def get_exmo():
+    START         = get_espochtime()
     URL           = 'https://api.exmo.com/v1/ticker/'
     CHECK_STRRING = 'DASH_BTC'
     SECON_STRRING = 'DASH_USD'
@@ -62,9 +71,12 @@ def get_exmo():
             if valbtc > 0 and valusd > 0:
                 dashbtc[exsymbol] = valbtc
                 dashusd[exsymbol] = valusd
+                dashbtc_ttook[exsymbol]  = dashusd_ttook[exsymbol] =  get_tooktime(START)
+                dashbtc_tstamp[exsymbol] = dashusd_tstamp[exsymbol] = epoch00
 
 
 def get_bittrex():
+    START         = get_espochtime()
     URL           = 'https://bittrex.com/api/v1.1/public/getticker?market=btc-dash'
     CHECK_STRRING = 'success'
     exsymbol      = 'bittrex'
@@ -74,9 +86,11 @@ def get_bittrex():
             valbtc = round(float(rawjson['result']['Last']), 5)
             if valbtc > 0:
                 dashbtc[exsymbol] = valbtc
-
+                dashbtc_ttook[exsymbol] =  get_tooktime(START)
+                dashbtc_tstamp[exsymbol] = epoch00
 
 def get_btcebtc():
+    START         = get_espochtime()
     URL           = 'https://btc-e.com/api/3/ticker/dsh_btc'
     CHECK_STRRING = 'dsh_btc'
     exsymbol      = 'btce'
@@ -85,9 +99,12 @@ def get_btcebtc():
         valbtc = round(float(rawjson[CHECK_STRRING]['last']), 5)
         if valbtc > 0:
             dashbtc[exsymbol] = valbtc
+            dashbtc_ttook[exsymbol] =  get_tooktime(START)
+            dashbtc_tstamp[exsymbol] = epoch00
 
 
 def get_btceusd():
+    START         = get_espochtime()
     URL           = 'https://btc-e.com/api/3/ticker/dsh_usd'
     CHECK_STRRING = 'dsh_usd'
     exsymbol      = 'btce'
@@ -96,9 +113,12 @@ def get_btceusd():
         valusd = round(float(rawjson[CHECK_STRRING]['last']), 2)
         if valusd > 0:
             dashusd[exsymbol] = valusd
+            dashusd_ttook[exsymbol] =  get_tooktime(START)
+            dashusd_tstamp[exsymbol] = epoch00
 
 
 def get_xbtcebtc():
+    START         = get_espochtime()
     URL           = 'https://cryptottlivewebapi.xbtce.net:8443/api/v1/public/ticker/DSHBTC'
     CHECK_STRRING = 'Symbol'
     exsymbol      = 'xbtce'
@@ -108,8 +128,11 @@ def get_xbtcebtc():
             valbtc = round(float(rawjson['BestBid']), 5)
             if valbtc > 0:
                dashbtc[exsymbol] = valbtc 
+               dashbtc_ttook[exsymbol] =  get_tooktime(START)
+               dashbtc_tstamp[exsymbol] = epoch00
 
 def get_xbtceusd():
+    START         = get_espochtime()
     URL           = 'https://cryptottlivewebapi.xbtce.net:8443/api/v1/public/ticker/DSHUSD'
     CHECK_STRRING = 'Symbol'
     exsymbol      = 'xbtce'
@@ -118,9 +141,12 @@ def get_xbtceusd():
         if rawjson[CHECK_STRRING] == 'DSHUSD':
             valusd = round(float(rawjson['BestBid']), 2)
             if valusd > 0:
-               dashusd[exsymbol] = valusd
+                dashusd[exsymbol] = valusd
+                dashusd_ttook[exsymbol] =  get_tooktime(START)
+                dashusd_tstamp[exsymbol] = epoch00
 
 def get_yobit():
+    START         = get_espochtime()
     URL           = 'https://yobit.net/api/2/dash_btc/ticker'
     CHECK_STRRING = 'ticker'
     exsymbol      = 'yobit'
@@ -129,9 +155,12 @@ def get_yobit():
         valbtc = round(float(rawjson['ticker']['last']), 5)
         if valbtc > 0:
             dashbtc[exsymbol] = valbtc    
+            dashbtc_ttook[exsymbol] =  get_tooktime(START)
+            dashbtc_tstamp[exsymbol] = epoch00
 
 
 def get_livecoinbtc():
+    START         = get_espochtime()
     URL           = 'https://api.livecoin.net/exchange/ticker?currencyPair=DASH/BTC'
     CHECK_STRRING = 'last'
     exsymbol      = 'livecoin'
@@ -140,8 +169,11 @@ def get_livecoinbtc():
         valbtc = round(float(rawjson[CHECK_STRRING]), 5)
         if valbtc > 0:
             dashbtc[exsymbol] = valbtc
+            dashbtc_ttook[exsymbol] =  get_tooktime(START)
+            dashbtc_tstamp[exsymbol] = epoch00
 
 def get_livecoinusd():
+    START         = get_espochtime()
     URL           = 'https://api.livecoin.net/exchange/ticker?currencyPair=DASH/USD'
     CHECK_STRRING = 'last'
     exsymbol      = 'livecoin'
@@ -150,6 +182,8 @@ def get_livecoinusd():
         valusd = round(float(rawjson[CHECK_STRRING]), 2)
         if valusd > 0:
             dashusd[exsymbol] = valusd
+            dashusd_ttook[exsymbol] =  get_tooktime(START)
+            dashusd_tstamp[exsymbol] = epoch00
 
 #-----------
 def check_redis():
@@ -198,7 +232,14 @@ r = redis.StrictRedis(connection_pool=POOL)
 
 #
 dashbtc = {}
+dashbtc_ttook = {}
+dashbtc_tstamp = {}
+
 dashusd = {}
+dashusd_ttook = {}
+dashusd_tstamp = {}
+
+
 now = datetime.now()
 epoch00 = int(time.mktime(now.timetuple())) - now.second
 
@@ -252,6 +293,10 @@ try:
     try:
         streamer.log_object(dashbtc, key_prefix=ISS_PREFIX_DASHBTC, epoch=epoch00)
         streamer.log_object(dashusd, key_prefix=ISS_PREFIX_DASHUSD, epoch=epoch00)
+        streamer.log_object(dashbtc_ttook, key_prefix=ISS_PREFIX_DASHBTC_TT, epoch=epoch00)
+        streamer.log_object(dashbtc_tstamp, key_prefix=ISS_PREFIX_DASHBTC_TS, epoch=epoch00)
+        streamer.log_object(dashusd_ttook, key_prefix=ISS_PREFIX_DASHUSD_TT, epoch=epoch00)
+        streamer.log_object(dashusd_tstamp, key_prefix=ISS_PREFIX_DASHUSD_TS, epoch=epoch00)
         streamer.flush()
         streamer.close()
 
