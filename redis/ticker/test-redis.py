@@ -97,6 +97,9 @@ try:
     print('r_KEY_TICKER')
     pp.pprint(r.get(r_KEY_TICKER))
 
+    #print('r_KEY_DASH_USD_AVG_HISTORY')
+    #pp.pprint(r.get(r_KEY_DASH_USD_AVG_HISTORY))
+    
 except Exception as e:
     print(e.args[0])
     sys.exit()
