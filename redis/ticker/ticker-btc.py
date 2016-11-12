@@ -12,9 +12,9 @@ from statistics import mean
 from ISStreamer.Streamer import Streamer
 from twython import Twython, TwythonError
 
-from config.role import HOST_ROLE, MASTER_SETINEL_HOST, MASTER_REDIS_MASTER, SLAVE_SETINEL_HOST, SLAVE_REDIS_MASTER
-from config.twitter import APP_KEY, APP_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET, ISS_BUCKET_NAME, ISS_BUCKET_KEY, ISS_BUCKET_AKEY, ISS_PREFIX_BTCUSD, ISS_PREFIX_BTCUSD_TT, ISS_PREFIX_BTCUSD_TS
-from config.rkeys import r_KEY_BTC_PRICE, r_SS_BTC_PRICE
+from config.role import *
+from config.twitter import *
+from config.rkeys import *
 
 def get_espochtime():
     return time.time()
@@ -189,15 +189,14 @@ try:
         l_btcusd.append(btcusd[key])
 
     btcusd['avg'] = round(mean(sorted(l_btcusd)[1:-1]), 2)
-    #btcusd['tstamp'] = epoch00
-    btcusd['tstamp'] = int(time.time())
     
     # redis
     try:
         pipe = r.pipeline()
         pipe.set(r_KEY_BTC_PRICE, json.dumps(btcusd, sort_keys=True))
+        pipe.set(r_KEY_BTC_PRICE_TSTAMP, json.dumps(btcusd_tstamp, sort_keys=True))
         pipe.zadd(r_SS_BTC_PRICE, epoch00, str(epoch00) + ':' + str(btcusd['avg']))
-        response = pipe.execute()
+        response = pipe.execute() 
 
     except Exception as e:
         print(e.args[0])

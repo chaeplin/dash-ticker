@@ -12,9 +12,9 @@ from statistics import mean
 from ISStreamer.Streamer import Streamer
 from twython import Twython, TwythonError
 
-from config.role import HOST_ROLE, MASTER_SETINEL_HOST, MASTER_REDIS_MASTER, SLAVE_SETINEL_HOST, SLAVE_REDIS_MASTER
-from config.twitter import APP_KEY, APP_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET, ISS_BUCKET_NAME, ISS_BUCKET_KEY, ISS_BUCKET_AKEY, ISS_PREFIX_DASHBTC, ISS_PREFIX_DASHUSD, ISS_PREFIX_DASHUSD_TT, ISS_PREFIX_DASHUSD_TS, ISS_PREFIX_DASHBTC_TT, ISS_PREFIX_DASHBTC_TS
-from config.rkeys import r_KEY_DASH_BTC_PRICE, r_KEY_DASH_USD_PRICE, r_SS_DASH_BTC_PRICE, r_SS_DASH_USD_PRICE
+from config.role import *
+from config.twitter import *
+from config.rkeys import *
 
 def get_espochtime():
     return time.time()
@@ -272,15 +272,14 @@ try:
 
     dashbtc['avg'] = round(mean(sorted(l_dashbtc)[1:-1]), 5)
     dashusd['avg'] = round(mean(sorted(l_dashusd)[1:-1]), 2)
-
-    #dashbtc['tstamp'] = dashusd['tstamp'] = epoch00
-    dashbtc['tstamp'] = dashusd['tstamp'] = int(time.time())
     
     # redis
     try:
         pipe = r.pipeline()
         pipe.set(r_KEY_DASH_BTC_PRICE, json.dumps(dashbtc, sort_keys=True))
         pipe.set(r_KEY_DASH_USD_PRICE, json.dumps(dashusd, sort_keys=True))
+        pipe.set(r_KEY_DASH_BTC_PRICE_TSTAMP, json.dumps(dashbtc_tstamp, sort_keys=True))
+        pipe.set(r_KEY_DASH_USD_PRICE_TSTAMP, json.dumps(dashusd_tstamp, sort_keys=True))
         pipe.zadd(r_SS_DASH_BTC_PRICE, epoch00, str(epoch00) + ':' + str(dashbtc['avg']))
         pipe.zadd(r_SS_DASH_USD_PRICE, epoch00, str(epoch00) + ':' + str(dashusd['avg']))
         response = pipe.execute()

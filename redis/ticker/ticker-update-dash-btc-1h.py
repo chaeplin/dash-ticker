@@ -9,8 +9,8 @@ from datetime import datetime
 import time
 from statistics import mean
 
-from config.role import HOST_ROLE, MASTER_SETINEL_HOST, MASTER_REDIS_MASTER, SLAVE_SETINEL_HOST, SLAVE_REDIS_MASTER
-from config.rkeys import r_SS_DASH_BTC_1H_HISTORY, r_SS_DASH_BTC_5MIN_HISTORY
+from config.role import *
+from config.rkeys import *
 
 def check_dash_last_1h_entry():
     try:

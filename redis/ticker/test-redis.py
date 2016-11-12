@@ -64,23 +64,38 @@ try:
     print('r_KEY_BTC_PRICE')
     pp.pprint(r.get(r_KEY_BTC_PRICE))
 
+    print('r_KEY_BTC_PRICE_TSTAMP')
+    pp.pprint(r.get(r_KEY_BTC_PRICE_TSTAMP))
+
+    print('r_KEY_DASH_BTC_PRICE_TSTAMP')
+    pp.pprint(r.get(r_KEY_DASH_BTC_PRICE_TSTAMP))
+
+    print('r_KEY_DASH_USD_PRICE_TSTAMP')
+    pp.pprint(r.get(r_KEY_DASH_USD_PRICE_TSTAMP))
+
     print('r_SS_DASH_BTC_PRICE')
-    pp.pprint(r.zrange(r_SS_DASH_BTC_PRICE, -10, -1, withscores=True))
+    pp.pprint(r.zrange(r_SS_DASH_BTC_PRICE, -5, -1, withscores=True))
 
     print('r_SS_DASH_USD_PRICE')
-    pp.pprint(r.zrange(r_SS_DASH_USD_PRICE, -10, -1, withscores=True))
+    pp.pprint(r.zrange(r_SS_DASH_USD_PRICE, -5, -1, withscores=True))
 
     print('r_SS_BTC_PRICE')
-    pp.pprint(r.zrange(r_SS_BTC_PRICE, -10, -1, withscores=True))
+    pp.pprint(r.zrange(r_SS_BTC_PRICE, -5, -1, withscores=True))
 
     print('r_SS_DASH_BTC_5MIN_HISTORY')
-    pp.pprint(r.zrange(r_SS_DASH_BTC_5MIN_HISTORY, -10, -1, withscores=True))
+    pp.pprint(r.zrange(r_SS_DASH_BTC_5MIN_HISTORY, -5, -1, withscores=True))
 
     print('r_SS_BTC_USD_24H_HISTORY')
-    pp.pprint(r.zrange(r_SS_BTC_USD_24H_HISTORY, -10, -1, withscores=True))
+    pp.pprint(r.zrange(r_SS_BTC_USD_24H_HISTORY, -5, -1, withscores=True))
 
     print('r_SS_DASH_BTC_1H_HISTORY')
-    pp.pprint(r.zrange(r_SS_DASH_BTC_1H_HISTORY, -10, -1, withscores=True))
+    pp.pprint(r.zrange(r_SS_DASH_BTC_1H_HISTORY, -5, -1, withscores=True))
+
+    print('r_KEY_TOTALBC')
+    pp.pprint(r.get(r_KEY_TOTALBC))
+
+    print('r_KEY_TICKER')
+    pp.pprint(r.get(r_KEY_TICKER))
 
 except Exception as e:
     print(e.args[0])
