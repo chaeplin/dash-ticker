@@ -53,6 +53,8 @@ def get_dash_1min_history(epoch_tocheck):
     while len(r.zrangebyscore(r_SS_DASH_BTC_PRICE, epoch_tocheck - 300, epoch_tocheck)) < 1: 
         print(epoch_tocheck)
         epoch_tocheck = epoch_tocheck + 300
+        if epoch_tocheck > epoch00:
+            sys.exit()
 
     last_5min = r.zrangebyscore(r_SS_DASH_BTC_PRICE, epoch_tocheck - 300, epoch_tocheck, withscores=True)
 

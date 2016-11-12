@@ -146,13 +146,15 @@ def check_redis():
 #---------------------------------
 def check_update():
     cur_time = time.time()
-    lastupdate = json.loads(r.get(r_KEY_BTC_PRICE))['tstamp']
+    lasttstamp = json.loads(r.get(r_KEY_BTC_PRICE))
+    if 'tstamp' in lasttstamp:
+        lastupdate = lasttstamp['tstamp']
 
-    if cur_time - lastupdate > 270 and cur_time - lastupdate < 330:
-        twitter.update_status(status='ticker btc has prob - 1')
+        if cur_time - lastupdate > 270 and cur_time - lastupdate < 330:
+            twitter.update_status(status='ticker btc has prob - 1')
 
-    if cur_time - lastupdate > 570 and cur_time - lastupdate < 630:
-        twitter.update_status(status='ticker btc has prob - 2')
+        if cur_time - lastupdate > 570 and cur_time - lastupdate < 630:
+            twitter.update_status(status='ticker btc has prob - 2')
 
 #---------------------------------
 twitter = Twython(APP_KEY, APP_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
@@ -189,6 +191,7 @@ try:
         l_btcusd.append(btcusd[key])
 
     btcusd['avg'] = round(mean(sorted(l_btcusd)[1:-1]), 2)
+    btcusd['tstamp'] = int(time.time())
     
     # redis
     try:
@@ -220,4 +223,3 @@ except Exception as e:
 
 except KeyboardInterrupt:
     sys.exit()
-
