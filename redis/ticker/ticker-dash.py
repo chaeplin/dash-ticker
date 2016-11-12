@@ -223,7 +223,6 @@ def check_update():
 
 
 #-----------------#
-streamer = Streamer(bucket_name=ISS_BUCKET_NAME, bucket_key=ISS_BUCKET_KEY, access_key=ISS_BUCKET_AKEY, buffer_size=50)
 twitter = Twython(APP_KEY, APP_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
 
 # redis
@@ -292,6 +291,7 @@ try:
 
     # ISS
     try:
+        streamer = Streamer(bucket_name=ISS_BUCKET_NAME, bucket_key=ISS_BUCKET_KEY, access_key=ISS_BUCKET_AKEY, buffer_size=50)
         streamer.log_object(dashbtc, key_prefix=ISS_PREFIX_DASHBTC, epoch=epoch00)
         streamer.log_object(dashusd, key_prefix=ISS_PREFIX_DASHUSD, epoch=epoch00)
         streamer.log_object(dashbtc_ttook, key_prefix=ISS_PREFIX_DASHBTC_TT, epoch=epoch00)

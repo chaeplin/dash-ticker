@@ -155,7 +155,6 @@ def check_update():
         twitter.update_status(status='ticker btc has prob - 2')
 
 #---------------------------------
-streamer = Streamer(bucket_name=ISS_BUCKET_NAME, bucket_key=ISS_BUCKET_KEY, access_key=ISS_BUCKET_AKEY, buffer_size=50)
 twitter = Twython(APP_KEY, APP_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
 
 # redis
@@ -206,6 +205,7 @@ try:
 
     # ISS
     try:
+        streamer = Streamer(bucket_name=ISS_BUCKET_NAME, bucket_key=ISS_BUCKET_KEY, access_key=ISS_BUCKET_AKEY, buffer_size=50)
         streamer.log_object(btcusd, key_prefix=ISS_PREFIX_BTCUSD, epoch=epoch00)
         streamer.log_object(btcusd_ttook, key_prefix=ISS_PREFIX_BTCUSD_TT, epoch=epoch00)
         streamer.log_object(btcusd_tstamp, key_prefix=ISS_PREFIX_BTCUSD_TS, epoch=epoch00)
