@@ -274,8 +274,9 @@ try:
     dashbtc['avg'] = round(mean(sorted(l_dashbtc)[1:-1]), 5)
     dashusd['avg'] = round(mean(sorted(l_dashusd)[1:-1]), 2)
 
-    dashbtc['tstamp'] = dashusd['tstamp'] = epoch00
-
+    #dashbtc['tstamp'] = dashusd['tstamp'] = epoch00
+    dashbtc['tstamp'] = dashusd['tstamp'] = int(time.time())
+    
     # redis
     try:
         pipe = r.pipeline()

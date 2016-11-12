@@ -190,8 +190,9 @@ try:
         l_btcusd.append(btcusd[key])
 
     btcusd['avg'] = round(mean(sorted(l_btcusd)[1:-1]), 2)
-    btcusd['tstamp'] = epoch00
-
+    #btcusd['tstamp'] = epoch00
+    btcusd['tstamp'] = int(time.time())
+    
     # redis
     try:
         pipe = r.pipeline()
