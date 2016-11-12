@@ -24,8 +24,9 @@ def get_data():
     for x in data1h:
         tstampx, minvalx, avgvalx, maxvalx = x.decode("utf-8").split(':')
 #        list_min.append([int(tstampx + '000'), float(minvalx)])
-        list_avg.append([int(tstampx + '000'), float(avgvalx)])
+#        list_avg.append([int(tstampx + '000'), float(avgvalx)])
 #        list_max.append([int(tstampx + '000'), float(maxvalx)])
+        list_avg.append([int(tstampx + '000'), float(maxvalx)])
 
     data5m = r.zrangebyscore(r_SS_DASH_BTC_5MIN_HISTORY, epoch5minlast, epoch1minlast)
     for y in data5m:

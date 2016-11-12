@@ -37,7 +37,8 @@ def get_dash_btc_avg_history():
                 epoch_datetime, val = y.decode("utf-8").split(':')
                 tempval.append(float(val))
 
-            btcavgval = round(mean(sorted(tempval)), 2)
+            #btcavgval = round(mean(sorted(tempval)), 2)
+            btcavgval = round(sorted(tempval)[-1], 2)
 
         else:
             btcusd_price = r.zrangebyscore(r_SS_BTC_PRICE, datestamp - 3600, datestamp + 3600, withscores=False)
