@@ -48,6 +48,14 @@ Highcharts.setOptions({
                 height: 400
             },
 
+            xAxis: {
+                tickInterval: 1
+            },
+            
+            credits: {
+                enabled: false
+            },
+            
             title: {
                 text: 'Dash Price'
             },
@@ -55,6 +63,7 @@ Highcharts.setOptions({
             series: [{
                 name: 'Dash Price',
                 data: data,
+                step: true,
                 type: 'spline',
                 tooltip: {
                     valueDecimals: 5
