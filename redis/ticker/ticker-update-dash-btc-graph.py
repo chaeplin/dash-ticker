@@ -91,8 +91,8 @@ r = redis.StrictRedis(connection_pool=POOL)
 #
 now = datetime.now()
 epoch00 = int(time.mktime(now.timetuple())) - now.second
-epoch1minlast = epoch00 - (86400 * 7)
-epoch5minlast = epoch1minlast - (86400 * 30)
+epoch1minlast = epoch00 - (86400 * 1)
+epoch5minlast = epoch1minlast - (86400 * 7)
 
 #---------------------
 #
