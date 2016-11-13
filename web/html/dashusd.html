@@ -59,6 +59,9 @@ Highcharts.setOptions({
             series: [{
                 name: 'Dash Price',
                 data: data,
+                dataGrouping: {
+                    enabled: false
+                }
                 step: true,
                 type: 'spline',
                 tooltip: {
