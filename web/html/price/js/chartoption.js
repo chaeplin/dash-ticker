@@ -49,7 +49,7 @@ var draw= function(hashrate, doarate) {
       }
     },
     yAxis: [{
-        //min: 0, 
+        min: 0, 
             title: {
                 text: 'USD'
             }
