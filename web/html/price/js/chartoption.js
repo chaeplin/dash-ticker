@@ -16,13 +16,17 @@ var draw= function(hashrate, doarate) {
     rangeSelector: {
         buttons: [{
             type: 'hour',
-            count: 1,
-            text: '1h'
+            count: 6,
+            text: '6h'
         }, {
             type: 'day',
             count: 1,
             text: '1d'
         }, {
+            type: 'day',
+            count: 7,
+            text: '7d'
+        }, {          
             type: 'month',
             count: 1,
             text: '1m'
@@ -35,7 +39,7 @@ var draw= function(hashrate, doarate) {
             text: 'All'
         }],
         inputEnabled: false, // it supports only days
-        selected: 1 // all
+        selected: 2 // all
     },
     xAxis: {
       type: 'datetime',
