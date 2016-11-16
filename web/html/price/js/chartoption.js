@@ -95,7 +95,9 @@ var draw= function(hashrate, doarate) {
       type: 'areaspline',
       name: 'USD',
       data: hashrate,
-      valueDecimals: 2,
+      tooltip: {
+        valueDecimals: 2
+      },
       lineWidth: 2,
       marker: {
         enabled: false
@@ -105,7 +107,9 @@ var draw= function(hashrate, doarate) {
       type: 'spline',
       name: 'BTC',
       data: doarate,
-      valueDecimals: 5,
+      tooltip: {
+        valueDecimals: 5
+      },
       lineWidth: 1,
       marker: {
         enabled: false
