@@ -9,6 +9,11 @@ server setup
 ```
 !
 apt-get install libpcre++-dev
+apt install libqrencode-dev libqrencode3
+apt install libgd-dev
+apt install libgd3
+!
+git clone https://github.com/dcshi/ngx_http_qrcode_module.git
 !
 wget https://openresty.org/download/openresty-1.11.2.1.tar.gz
 tar -xzvf openresty-1.11.2.1.tar.gz
@@ -25,6 +30,7 @@ tar -xzvf openresty-1.11.2.1.tar.gz
 --with-pcre-jit \
 --with-http_iconv_module \
 --with-luajit \
+--add-module=ngx_http_qrcode_module/ \
 --prefix=/usr/local 
 
 
