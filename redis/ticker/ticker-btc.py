@@ -28,14 +28,19 @@ def make_request(URL, CHECK_STRRING):
 
     try:
         response = requests.get(URL, headers=headers, timeout=(2,5))
-        if response.status_code == requests.codes.ok and len(response.text) > 2:
-            if isinstance(response.json(), list):
-                if CHECK_STRRING in response.json()[0]:
-                    return response.json()[0]
+        try:
+            if response.status_code == requests.codes.ok and len(response.text) > 2:
+                if isinstance(response.json(), list):
+                    if CHECK_STRRING in response.json()[0]:
+                        return response.json()[0]
 
-            else:
-                if CHECK_STRRING in response.json():
-                    return response.json()
+                else:
+                    if CHECK_STRRING in response.json():
+                        return response.json()
+
+        except Exception as e:
+            print(e.args[0])
+            return None
 
     except requests.exceptions.RequestException:
         return None
