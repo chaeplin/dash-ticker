@@ -9,7 +9,8 @@ var draw= function(hashrate, doarate) {
     credits: { enabled: false },
     chart: { 
         renderTo: 'graph', 
-        zoomType: 'x'
+        zoomType: 'x',
+        height: 520,
     },
     exporting: { enabled: false },
     title: { text: 'Dash price' },
