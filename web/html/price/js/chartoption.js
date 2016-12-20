@@ -53,17 +53,24 @@ var draw= function(hashrate, doarate) {
       }
     },
     yAxis: [{
-        min: 0, 
+        //min: 0, 
         title: {
           text: 'USD'
-          }
+          },
+          showEmpty: false,
+          height: '80%',
+          opposite: true,
+          floor: 0          
         }, {
-        min: 0,
+        //min: 0,
         title: {
           text: 'BTC'
         },
-        opposite: true
-        }],
+          showEmpty: false,
+          height: '80%',
+          opposite: true,
+          floor: 0
+    }],
     tooltip: {
       shared: true
     },

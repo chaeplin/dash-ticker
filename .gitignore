@@ -2,3 +2,5 @@
 redis/ticker/config/role.py
 
 redis/ticker/config/twitter.py
+
+web/html/price/js/option.js.sample.js
