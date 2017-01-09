@@ -277,8 +277,16 @@ try:
     for key in dashusd:
         l_dashusd.append(dashusd[key])
 
-    dashbtc['avg'] = round(mean(sorted(l_dashbtc)[1:-1]), 5)
-    dashusd['avg'] = round(mean(sorted(l_dashusd)[1:-1]), 2)
+    if len(l_dashbtc) < 3:
+        dashbtc['avg'] = round(mean(sorted(l_dashbtc)), 5)        
+    else:
+        dashbtc['avg'] = round(mean(sorted(l_dashbtc)[1:-1]), 5)
+       
+    if len(l_dashusd) < 3:
+        dashusd['avg'] = round(mean(sorted(l_dashusd)), 2)
+    else: 
+        dashusd['avg'] = round(mean(sorted(l_dashusd)[1:-1]), 2)
+        
     dashbtc['tstamp'] = dashusd['tstamp'] = int(time.time())
     
     # redis
