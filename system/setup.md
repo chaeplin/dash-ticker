@@ -26,10 +26,10 @@ tar -xzvf openresty-1.11.2.1.tar.gz
 --with-http_ssl_module \
 --without-http_autoindex_module \
 --without-http_xss_module \
---without-lua_cjson \
 --with-pcre-jit \
 --with-http_iconv_module \
 --with-luajit \
+--with-lua51 \
 --add-module=ngx_http_qrcode_module/ \
 --prefix=/usr/local 
 
