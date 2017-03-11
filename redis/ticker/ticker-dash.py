@@ -190,6 +190,34 @@ def get_livecoinusd():
             dashusd_ttook[exsymbol] =  get_tooktime(START)
             dashusd_tstamp[exsymbol] = epoch00
 
+#
+def get_bitfinex_dashbtc():
+    START         = get_espochtime()
+    URL           = 'https://api.bitfinex.com/v1/pubticker/DSHBTC'
+    CHECK_STRRING = 'last_price'
+    exsymbol      = 'bitfinex'
+    rawjson       = make_request(URL, CHECK_STRRING)
+
+    if rawjson:
+        valbtc = round(float(rawjson[CHECK_STRRING]), 5)
+        if valbtc > 0:
+            dashbtc[exsymbol] = valbtc
+            dashbtc_ttook[exsymbol] =  get_tooktime(START)
+            dashbtc_tstamp[exsymbol] = epoch00
+
+def get_bitfinex_dashusd():
+    START         = get_espochtime()
+    URL           = 'https://api.bitfinex.com/v1/pubticker/DSHUSD'
+    CHECK_STRRING = 'last_price'
+    exsymbol      = 'bitfinex'
+    rawjson       = make_request(URL, CHECK_STRRING)
+    if rawjson:
+        valusd = round(float(rawjson[CHECK_STRRING]), 2)
+        if valusd > 0:
+            dashusd[exsymbol] = valusd
+            dashusd_ttook[exsymbol] =  get_tooktime(START)
+            dashusd_tstamp[exsymbol] = epoch00
+
 #-----------
 def check_redis():
     if HOST_ROLE == 'MASTER':
@@ -266,8 +294,10 @@ try:
     get_xbtcebtc()
     get_xbtceusd()
     get_yobit()
-    get_livecoinbtc()
-    get_livecoinusd()
+    #get_livecoinbtc()
+    #get_livecoinusd()
+    get_bitfinex_dashbtc()
+    get_bitfinex_dashusd()
 
     l_dashbtc = []
     for key in dashbtc:
