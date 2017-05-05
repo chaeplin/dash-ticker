@@ -9,12 +9,15 @@ from datetime import datetime
 import time
 from statistics import mean
 
-from ISStreamer.Streamer import Streamer
+#from ISStreamer.Streamer import Streamer
 from twython import Twython, TwythonError
 
 from config.role import *
 from config.twitter import *
 from config.rkeys import *
+
+def shiptoredis(datatoship):
+    rx.lpush(QUE_NAME, json.dumps(datatoship))
 
 def get_espochtime():
     return time.time()
@@ -40,7 +43,7 @@ def make_request(URL, CHECK_STRRING):
 
         except Exception as e:
             print(e.args[0])
-            return None
+            pass
 
     except requests.exceptions.RequestException:
         return None
@@ -170,6 +173,7 @@ def get_livecoinbtc():
     CHECK_STRRING = 'last'
     exsymbol      = 'livecoin'
     rawjson       = make_request(URL, CHECK_STRRING)
+
     if rawjson:
         valbtc = round(float(rawjson[CHECK_STRRING]), 5)
         if valbtc > 0:
@@ -218,6 +222,37 @@ def get_bitfinex_dashusd():
             dashusd_ttook[exsymbol] =  get_tooktime(START)
             dashusd_tstamp[exsymbol] = epoch00
 
+#
+def get_kraken_dashbtc():
+    START         = get_espochtime()
+    URL           = 'https://api.kraken.com/0/public/Ticker?pair=DASHXBT'
+    CHECK_STRRING = 'result'
+    exsymbol      = 'kraken'
+    rawjson       = make_request(URL, CHECK_STRRING)
+
+    if rawjson:
+        valbtc = round(float(rawjson.get('result').get('DASHXBT').get('b')[0]), 5)
+        if valbtc > 0:
+            dashbtc[exsymbol] = valbtc
+            dashbtc_ttook[exsymbol] =  get_tooktime(START)
+            dashbtc_tstamp[exsymbol] = epoch00
+
+
+def get_kraken_dashusd():
+    START         = get_espochtime()
+    URL           = 'https://api.kraken.com/0/public/Ticker?pair=DASHUSD'
+    CHECK_STRRING = 'result'
+    exsymbol      = 'kraken'
+    rawjson       = make_request(URL, CHECK_STRRING)
+    if rawjson:
+        valusd = round(float(rawjson.get('result').get('DASHUSD').get('b')[0]), 2)
+        if valusd > 0:
+            dashusd[exsymbol] = valusd
+            dashusd_ttook[exsymbol] =  get_tooktime(START)
+            dashusd_tstamp[exsymbol] = epoch00
+
+#
+
 #-----------
 def check_redis():
     if HOST_ROLE == 'MASTER':
@@ -265,6 +300,11 @@ POOL = redis.ConnectionPool(host='localhost', port=6379, db=0)
 r = redis.StrictRedis(connection_pool=POOL)
 
 #
+# redis2
+POOLX = redis.ConnectionPool(host='192.168.10.2', port=16379, db=0)
+rx = redis.StrictRedis(connection_pool=POOLX)
+
+#
 dashbtc = {}
 dashbtc_ttook = {}
 dashbtc_tstamp = {}
@@ -294,11 +334,15 @@ try:
     get_xbtcebtc()
     get_xbtceusd()
     get_yobit()
-    #get_livecoinbtc()
-    #get_livecoinusd()
+    get_livecoinbtc()
+    get_livecoinusd()
     get_bitfinex_dashbtc()
     get_bitfinex_dashusd()
+    get_kraken_dashbtc()
+    get_kraken_dashusd()
 
+
+    #
     l_dashbtc = []
     for key in dashbtc:
         l_dashbtc.append(dashbtc[key])
@@ -316,9 +360,9 @@ try:
         dashusd['avg'] = round(mean(sorted(l_dashusd)), 2)
     else: 
         dashusd['avg'] = round(mean(sorted(l_dashusd)[1:-1]), 2)
-        
-    dashbtc['tstamp'] = dashusd['tstamp'] = int(time.time())
     
+    dashbtc['tstamp'] = dashusd['tstamp'] = int(time.time())
+
     # redis
     try:
         pipe = r.pipeline()
@@ -336,15 +380,57 @@ try:
 
     # ISS
     try:
-        streamer = Streamer(bucket_name=ISS_BUCKET_NAME, bucket_key=ISS_BUCKET_KEY, access_key=ISS_BUCKET_AKEY, buffer_size=50)
-        streamer.log_object(dashbtc, key_prefix=ISS_PREFIX_DASHBTC, epoch=epoch00)
-        streamer.log_object(dashusd, key_prefix=ISS_PREFIX_DASHUSD, epoch=epoch00)
-        streamer.log_object(dashbtc_ttook, key_prefix=ISS_PREFIX_DASHBTC_TT, epoch=epoch00)
-        streamer.log_object(dashbtc_tstamp, key_prefix=ISS_PREFIX_DASHBTC_TS, epoch=epoch00)
-        streamer.log_object(dashusd_ttook, key_prefix=ISS_PREFIX_DASHUSD_TT, epoch=epoch00)
-        streamer.log_object(dashusd_tstamp, key_prefix=ISS_PREFIX_DASHUSD_TS, epoch=epoch00)
-        streamer.flush()
-        streamer.close()
+#        streamer = Streamer(bucket_name=ISS_BUCKET_NAME, bucket_key=ISS_BUCKET_KEY, access_key=ISS_BUCKET_AKEY, buffer_size=50)
+#        streamer.log_object(dashbtc, key_prefix=ISS_PREFIX_DASHBTC, epoch=epoch00)
+        datatoship = {
+            "bucket_name": ISS_BUCKET_NAME,
+            "key_prefix": ISS_PREFIX_DASHBTC,
+            "epoch": epoch00,
+            "bucket": dashbtc
+        }
+        shiptoredis(datatoship)
+#        streamer.log_object(dashusd, key_prefix=ISS_PREFIX_DASHUSD, epoch=epoch00)
+        datatoship = {
+            "bucket_name": ISS_BUCKET_NAME,
+            "key_prefix": ISS_PREFIX_DASHUSD,
+            "epoch": epoch00,
+            "bucket": dashusd
+        }
+        shiptoredis(datatoship)
+#        streamer.log_object(dashbtc_ttook, key_prefix=ISS_PREFIX_DASHBTC_TT, epoch=epoch00)
+        datatoship = {
+            "bucket_name": ISS_BUCKET_NAME,
+            "key_prefix": ISS_PREFIX_DASHBTC_TT,
+            "epoch": epoch00,
+            "bucket": dashbtc_ttook
+        }
+        shiptoredis(datatoship)
+#        streamer.log_object(dashbtc_tstamp, key_prefix=ISS_PREFIX_DASHBTC_TS, epoch=epoch00)
+        datatoship = {
+            "bucket_name": ISS_BUCKET_NAME,
+            "key_prefix": ISS_PREFIX_DASHBTC_TS,
+            "epoch": epoch00,
+            "bucket": dashbtc_tstamp
+        }
+        shiptoredis(datatoship)
+#        streamer.log_object(dashusd_ttook, key_prefix=ISS_PREFIX_DASHUSD_TT, epoch=epoch00)
+        datatoship = {
+            "bucket_name": ISS_BUCKET_NAME,
+            "key_prefix": ISS_PREFIX_DASHUSD_TT,
+            "epoch": epoch00,
+            "bucket": dashusd_ttook
+        }
+        shiptoredis(datatoship)
+#        streamer.log_object(dashusd_tstamp, key_prefix=ISS_PREFIX_DASHUSD_TS, epoch=epoch00)
+        datatoship = {
+            "bucket_name": ISS_BUCKET_NAME,
+            "key_prefix": ISS_PREFIX_DASHUSD_TS,
+            "epoch": epoch00,
+            "bucket": dashusd_tstamp
+        }
+        shiptoredis(datatoship)
+#        streamer.flush()
+#        streamer.close()
 
     except Exception as e:
         print(e.args[0])

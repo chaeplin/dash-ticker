@@ -22,3 +22,6 @@ ISS_PREFIX_DASHBTC_TS = 'dashbtc_ts'
 ISS_PREFIX_DASHUSD    = 'dashusd'
 ISS_PREFIX_DASHUSD_TT = 'dashusd_tt'
 ISS_PREFIX_DASHUSD_TS = 'dashusd_ts'
+
+QUE_NAME          = 'INITIALSTATE_PUSH' + ISS_BUCKET_NAME
+
